@@ -3,7 +3,8 @@
 This project analyzes motor vehicle theft data from the New Zealand police department's vehicle of interest database. The primary goal is to identify patterns and trends in vehicle thefts to assist law enforcement and inform policy decisions.
 
 # Tools & Library Used
-![MySQL](https://github.com/user-attachments/assets/7e48fb90-2620-4a61-9583-a8950c9f2242)
+
+![MySQL](https://github.com/user-attachments/assets/ee3c21b7-e789-41c4-aaf4-93164756dada)
 
 
 https://www.mysql.com/
@@ -40,581 +41,182 @@ make_name (VARCHAR)
 make_type (VARCHAR)
 
 # Query Task
-#Daily Patterns
 #1.On which day of the week are vehicles most and least often stolen?
-SELECT 
-    DAYNAME(date_stolen) AS day_of_week,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    DAYNAME(date_stolen)
-ORDER BY 
-    theft_count DESC;
+![Q1](https://github.com/user-attachments/assets/02d4442c-83f5-4dd0-b449-ce51cc983b67)
+
 
 #2.How does the distribution of thefts vary between weekdays and weekends?
-SELECT 
-    CASE 
-        WHEN DAYOFWEEK(date_stolen) IN (1, 7) THEN 'Weekend'
-        ELSE 'Weekday'
-    END AS day_type,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    day_type
-ORDER BY 
-    theft_count DESC;
+![Q2](https://github.com/user-attachments/assets/ab0fefa5-3aeb-4ae3-8a93-7805249cbdf4)
+
     
 #3.What is the most common time of the month for vehicle thefts?
-SELECT 
-    MONTHNAME(date_stolen) AS month,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    MONTH(date_stolen), MONTHNAME(date_stolen)
-ORDER BY 
-    theft_count DESC;
-    
-    
-#Vehicle Type and Characteristics
+![Q3](https://github.com/user-attachments/assets/3e8715d9-2921-4b15-b790-d8dea16237bd)
+
 #4.What are the most and least stolen vehicle types overall?
-SELECT 
-    vehicle_type,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_type
-ORDER BY 
-    theft_count DESC;
+![Q4](https://github.com/user-attachments/assets/f649cbf1-dd60-4134-9090-21958f4afee3)
+
 
 #5.Are there specific vehicle makes or models that are more commonly stolen?
-SELECT 
-    md.make_name,
-    sv.vehicle_desc AS model,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles sv
-JOIN 
-    make_details md ON sv.make_id = md.make_id
-GROUP BY 
-    md.make_name, sv.vehicle_desc
-ORDER BY 
-    theft_count DESC;
+![Q5](https://github.com/user-attachments/assets/372d2c6f-5624-43cb-80ab-6780f405b2b8)
+
 
 
 #6.What is the distribution of stolen vehicles by their production year?
-SELECT 
-    model_year AS production_year,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    model_year
-ORDER BY 
-    production_year DESC;
+![Q6](https://github.com/user-attachments/assets/f3337d55-7a40-4301-9a79-467b6a34b323)
+
     
 #7.How does the average vehicle age vary across vehicle types (e.g., sedans, SUVs, trucks)?
-SELECT 
-    vehicle_type,
-    AVG(YEAR(CURDATE()) - model_year) AS average_age
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_type
-ORDER BY 
-    average_age DESC;
+![Q7](https://github.com/user-attachments/assets/c1e78104-6aa2-4e28-b112-0e41021e8ef9)
 
-
-    
-    
 #8.Which colors of vehicles are most and least commonly stolen?
-SELECT 
-    color,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    color
-ORDER BY 
-    theft_count DESC;
+![Q8](https://github.com/user-attachments/assets/14b03917-85f8-4ebc-8293-7e941610b27e)
+
     
 #9.Are older vehicles more likely to be stolen than newer ones?
-SELECT 
-    CASE 
-        WHEN YEAR(CURDATE()) - model_year > 10 THEN 'Older than 10 years'
-        ELSE '10 years or newer'
-    END AS vehicle_age_group,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_age_group
-ORDER BY 
-    theft_count DESC;
+![Q9](https://github.com/user-attachments/assets/6aee6751-659f-4118-8324-b1a3eb0a1d4b)
+
     
-#Regional Insights
+
 #10.Which regions report the highest and lowest vehicle thefts?
-SELECT 
-    l.region,
-    COUNT(s.vehicle_id) AS total_thefts
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region
-ORDER BY 
-    total_thefts DESC;
+![Q10](https://github.com/user-attachments/assets/bdb0d15a-c5ae-4d8a-a131-4a51ae98c072)
+
 
     
 #11.What is the distribution of stolen vehicle types across regions?
-SELECT 
-    l.region,
-    sv.vehicle_type,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles sv
-JOIN 
-    locations l ON sv.location_id = l.location_id
-GROUP BY 
-    l.region, sv.vehicle_type
-ORDER BY 
-    l.region, theft_count DESC;
+![Q11](https://github.com/user-attachments/assets/4c7bd0c1-44d0-4e5a-98e6-cd1823232987)
+
 
     
 #12.Are there regional patterns in the age or color of stolen vehicles?
-SELECT 
-    l.region,
-    AVG(YEAR(CURDATE()) - sv.model_year) AS average_age
-FROM 
-    stolen_vehicles sv
-JOIN 
-    locations l ON sv.location_id = l.location_id
-GROUP BY 
-    l.region
-ORDER BY 
-    average_age DESC;
+![Q12](https://github.com/user-attachments/assets/ca437d36-0650-44e3-803d-1d9c8c7ab45b)
+
 
     
 #13.Is there a correlation between vehicle thefts and regional socioeconomic factors?
-SELECT 
-    l.region,
-    COUNT(s.vehicle_id) AS total_thefts,
-    MAX(l.population) AS population,  
-    MAX(l.density) AS density          
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region
-ORDER BY 
-    total_thefts DESC;
+![Q13](https://github.com/user-attachments/assets/ea108480-bab4-4656-bcc9-3baee54ab5af)
+
 
 #14.Do certain regions report higher thefts on specific days of the week?
-SELECT 
-    l.region,
-    DAYNAME(s.date_stolen) AS day_of_week,
-    COUNT(s.vehicle_id) AS total_thefts
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region, day_of_week
-ORDER BY 
-    total_thefts DESC;
+![Q14](https://github.com/user-attachments/assets/eee04ccc-b779-4474-9eab-439fbd7450c4)
 
-    
-#Trend Analysis
+
 #15.How do vehicle thefts trend over time (monthly or weekly)?
-SELECT 
-    DATE_FORMAT(s.date_stolen, '%Y-%m') AS month,
-    COUNT(s.vehicle_id) AS total_thefts
-FROM 
-    stolen_vehicles s
-GROUP BY 
-    month
-ORDER BY 
-    month;
+![Q15](https://github.com/user-attachments/assets/a091ad62-f855-44aa-9894-cc380173c67a)
+
 
     
 #16.Are there seasonal variations in vehicle thefts?
-SELECT 
-    CASE 
-        WHEN MONTH(date_stolen) IN (12, 1, 2) THEN 'Winter'
-        WHEN MONTH(date_stolen) IN (3, 4, 5) THEN 'Spring'
-        WHEN MONTH(date_stolen) IN (6, 7, 8) THEN 'Summer'
-        WHEN MONTH(date_stolen) IN (9, 10, 11) THEN 'Autumn'
-    END AS season,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    season
-ORDER BY 
-    theft_count DESC;
+![Q16](https://github.com/user-attachments/assets/cc78c190-8cf2-446d-bb72-5dfa31d8ab73)
+
     
 #17.Are there any spikes in vehicle thefts during holidays or long weekends?
-SELECT 
-    date_stolen, 
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-WHERE 
-    DAYOFWEEK(date_stolen) IN (1, 7)
-GROUP BY 
-    date_stolen
-ORDER BY 
-    theft_count DESC;
+![Q17a](https://github.com/user-attachments/assets/20c519c9-6f77-4f44-9aff-947f9018385b)
 
 
-
-#Composite Patterns
 #18.What is the most common combination of vehicle type, make, year, and color for stolen vehicles?
-SELECT 
-    vehicle_type, make_id, model_year, color, 
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_type, make_id, model_year, color
-ORDER BY 
-    theft_count DESC
-LIMIT 1;
+![Q18](https://github.com/user-attachments/assets/76b1ee75-cfd8-43ad-b051-47e34a80868e)
+
 
 
 #19.Which combination of day, vehicle type, and region has the highest theft frequency?
-SELECT 
-    DAYNAME(date_stolen) AS day_of_week, 
-    vehicle_type, 
-    location_id, 
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles
-GROUP BY 
-    day_of_week, vehicle_type, location_id
-ORDER BY 
-    theft_count DESC
-LIMIT 1;
+![Q19](https://github.com/user-attachments/assets/40bcf098-1677-480a-b6cb-73b032230d34)
 
-##Additional Insights
+
 #20.What percentage of stolen vehicles belong to each vehicle type?
-SELECT 
-    vehicle_type,
-    COUNT(*) AS theft_count,
-    (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM stolen_vehicles)) AS percentage
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_type
-ORDER BY 
-    theft_count DESC;
+![Q20](https://github.com/user-attachments/assets/f7bc9d50-defc-44cf-9e93-8a66366e796c)
+
 
 
 
 #21.Are there outliers, such as vehicles of extremely high or low value, that are frequently stolen?
-SELECT 
-    sv.vehicle_type,
-    md.make_name,
-    sv.model_year,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles sv
-JOIN 
-    make_details md ON sv.make_id = md.make_id
-GROUP BY 
-    sv.vehicle_type, md.make_name, sv.model_year
-ORDER BY 
-    theft_count DESC;
+![Q21](https://github.com/user-attachments/assets/1a8418ea-c9ad-46aa-bda0-ffe350434135)
 
 
 
 #22.Is there any pattern in thefts linked to specific regions that may suggest organized theft rings?
-SELECT 
-    l.region,
-    COUNT(s.vehicle_id) AS total_thefts
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region
-ORDER BY 
-    total_thefts DESC;
-
+![Q22](https://github.com/user-attachments/assets/fee0cad5-f788-46f2-8705-9b6b47a749c3)
 
 
 
 #23.Which vehicle colors are disproportionately stolen?
-SELECT 
-    color,
-    COUNT(*) AS theft_count,
-    (COUNT(*) * 100.0 / (SELECT COUNT(*) FROM stolen_vehicles)) AS percentage
-FROM 
-    stolen_vehicles
-GROUP BY 
-    color
-ORDER BY 
-    theft_count DESC;
+![Q23](https://github.com/user-attachments/assets/db44acd4-be28-4217-b76a-35040d771c8b)
 
 
 
-#Advanced Analysis
 #24.Are thefts concentrated in urban versus rural regions (if regional data granularity is available)?
-SELECT 
-    CASE 
-        WHEN l.density >= 1000 THEN 'Urban' 
-        ELSE 'Rural' 
-    END AS area_type,
-    COUNT(s.vehicle_id) AS theft_count
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    area_type;
+![Q24](https://github.com/user-attachments/assets/4cbfdb40-02a3-48bc-8a32-9945491c5c5d)
+
 
 
 #25.Is there any correlation between vehicle theft rates and the average age of vehicles registered in a region?
-SELECT 
-    l.region,
-    COUNT(s.vehicle_id) AS theft_count,
-    AVG(2025 - s.model_year) AS average_vehicle_age
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region;
+![Q25](https://github.com/user-attachments/assets/243bcde7-6c2b-4512-88ac-2fa1a2857883)
+
 
 
 
 #26.Which regions have the most diverse mix of vehicle types stolen?
-SELECT 
-    l.region,
-    COUNT(DISTINCT s.vehicle_type) AS distinct_vehicle_count
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region
-ORDER BY 
-    distinct_vehicle_count DESC;
+![Q26](https://github.com/user-attachments/assets/cb68045a-7f2c-4325-8b92-969db0ca94d7)
+
 
 
 #27.Are newer vehicle models more likely to be stolen in certain regions?
-SELECT 
-    l.region,
-    COUNT(s.vehicle_id) AS newer_vehicle_theft_count
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-WHERE 
-    s.model_year >= 2020
-GROUP BY 
-    l.region
-ORDER BY 
-    newer_vehicle_theft_count DESC;
+![Q27](https://github.com/user-attachments/assets/ff6fddee-8df9-42a9-b918-62ed8a36bff3)
+
 
 
 #28.What proportion of thefts involve vehicles that are over 10 years old?
-SELECT 
-    CASE 
-        WHEN YEAR(CURDATE()) - model_year > 10 THEN 'Over 10 Years Old'
-        ELSE '10 Years or Newer'
-    END AS vehicle_age_group, 
-    COUNT(*) * 100.0 / (SELECT COUNT(*) FROM stolen_vehicles) AS percentage
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_age_group;
-    
-    SELECT 
-    COUNT(*) AS total_thefts,
-    COUNT(CASE WHEN model_year <= 2014 THEN 1 END) AS thefts_over_10_years,
-    (COUNT(CASE WHEN model_year <= 2014 THEN 1 END) * 100.0 / COUNT(*)) AS proportion_over_10_years
-FROM 
-    stolen_vehicles;
+![Q28](https://github.com/user-attachments/assets/9e778f66-3862-4256-b144-fc4f44089b34)
 
-#Focused Questions
+
 #29.Are any vehicle types predominantly stolen during weekends?
-SELECT 
-    vehicle_type,
-    COUNT(*) AS total_thefts,
-    COUNT(CASE WHEN DAYOFWEEK(date_stolen) IN (1, 7) THEN 1 END) AS weekend_thefts,
-    (COUNT(CASE WHEN DAYOFWEEK(date_stolen) IN (1, 7) THEN 1 END) * 100.0 / COUNT(*)) AS weekend_proportion
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_type
-ORDER BY 
-    weekend_thefts DESC;
+![Q29](https://github.com/user-attachments/assets/d454e652-8dfe-4b32-aa94-b2acd35442d3)
+
 
 
 #30.Which vehicle colors are most likely stolen during weekdays versus weekends?
-SELECT 
-    color,
-    COUNT(*) AS total_thefts,
-    COUNT(CASE WHEN DAYOFWEEK(date_stolen) IN (1, 7) THEN 1 END) AS weekend_thefts,
-    COUNT(CASE WHEN DAYOFWEEK(date_stolen) BETWEEN 2 AND 6 THEN 1 END) AS weekday_thefts,
-    (COUNT(CASE WHEN DAYOFWEEK(date_stolen) IN (1, 7) THEN 1 END) * 100.0 / COUNT(*)) AS weekend_proportion,
-    (COUNT(CASE WHEN DAYOFWEEK(date_stolen) BETWEEN 2 AND 6 THEN 1 END) * 100.0 / COUNT(*)) AS weekday_proportion
-FROM 
-    stolen_vehicles
-GROUP BY 
-    color
-ORDER BY 
-    weekend_thefts DESC, weekday_thefts DESC;
+![Q30](https://github.com/user-attachments/assets/c7207776-8a06-4f9d-8953-b62c67d6c1be)
+
 
 #31.What proportion of thefts occur within each region, and how does this compare to the national average?
-SELECT 
-    l.region,
-    COUNT(s.vehicle_id) AS total_thefts,
-    (COUNT(s.vehicle_id) * 100.0 / (SELECT COUNT(*) FROM stolen_vehicles)) AS proportion_of_thefts
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region
-ORDER BY 
-    total_thefts DESC;
+![Q31](https://github.com/user-attachments/assets/7def208a-89a1-4403-b7b9-0a8acae2b76d)
+
 
 
 
 #32.Are certain colors of vehicles more likely to be stolen in regions with high theft rates?
-WITH HighTheftRegions AS (
-    SELECT 
-        l.region,
-        COUNT(s.vehicle_id) AS total_thefts
-    FROM 
-        stolen_vehicles s
-    JOIN 
-        locations l ON s.location_id = l.location_id
-    GROUP BY 
-        l.region
-    HAVING 
-        total_thefts > (SELECT AVG(total_thefts) FROM (
-            SELECT COUNT(vehicle_id) AS total_thefts
-            FROM stolen_vehicles s
-            JOIN locations l ON s.location_id = l.location_id
-            GROUP BY l.region
-        ) AS regional_totals)
-)
-
-SELECT 
-    s.color,
-    COUNT(*) AS theft_count
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-WHERE 
-    l.region IN (SELECT region FROM HighTheftRegions)
-GROUP BY 
-    s.color
-ORDER BY 
-    theft_count DESC;
+![Q32](https://github.com/user-attachments/assets/c2f4ce61-1605-43e2-b24f-af3e80cc0f9b)
 
 
 
 #33.Which vehicle colors are most likely to be stolen during weekends, and does this trend vary by region?
-SELECT 
-    s.color,
-    l.region,
-    COUNT(*) AS weekend_theft_count
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-WHERE 
-    DAYOFWEEK(s.date_stolen) IN (1, 7)  -- Assuming 1 = Sunday, 7 = Saturday
-GROUP BY 
-    s.color, l.region
-ORDER BY 
-    weekend_theft_count DESC;
+![Q33](https://github.com/user-attachments/assets/6aa6b80e-2970-4fd4-82b3-7229c6a8e988)
 
 
 
-#Anomalies and Patterns
 #34.Are there any unexpected spikes or drops in vehicle thefts in certain regions?
-SELECT 
-    l.region,
-    DATE_FORMAT(s.date_stolen, '%Y-%m') AS month,
-    COUNT(*) AS total_thefts
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region, month
-ORDER BY 
-    l.region, month;
+![Q34](https://github.com/user-attachments/assets/3bd81ce2-44aa-424a-97fd-8b2374db3ca5)
+
 
 
 
 #35.Do certain vehicle makes or models experience theft spikes in specific months or seasons?
-SELECT 
-    md.make_name,
-    sv.vehicle_desc AS model,
-    DATE_FORMAT(sv.date_stolen, '%Y-%m') AS month,
-    COUNT(*) AS total_thefts
-FROM 
-    stolen_vehicles sv
-JOIN 
-    make_details md ON sv.make_id = md.make_id
-GROUP BY 
-    md.make_name, sv.vehicle_desc, month
-ORDER BY 
-    total_thefts DESC;
+![Q35](https://github.com/user-attachments/assets/51eccbc1-b04d-4252-b8d6-b491a2db622d)
+
 
 
 
 #36.What is the distribution of theft incidents for vehicles older than 20 years?
-SELECT 
-    l.region,
-    COUNT(*) AS total_thefts,
-    DATE_FORMAT(s.date_stolen, '%Y-%m') AS month
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-WHERE 
-    s.model_year <= 2004
-GROUP BY 
-    l.region, month
-ORDER BY 
-    l.region, month;
+![Q36](https://github.com/user-attachments/assets/80492fef-b8d2-48eb-935e-9f5c304a1386)
+
 
 
 #37.Which regions have thefts that deviate significantly from national averages in vehicle type or age?
-SELECT 
-    vehicle_type,
-    COUNT(*) AS total_thefts,
-    AVG(model_year) AS average_age
-FROM 
-    stolen_vehicles
-GROUP BY 
-    vehicle_type;
-#38. SQL Query to Calculate Regional Theft Counts
-#Next, we need to calculate the total theft counts by region for comparison:
-SELECT 
-    l.region,
-    s.vehicle_type,
-    COUNT(*) AS total_thefts,
-    AVG(s.model_year) AS average_age
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region, s.vehicle_type;
+![Q37](https://github.com/user-attachments/assets/744648a7-a562-4004-b23e-00ff5ee49f81)
+
+    
+#38. SQL Query to Calculate Regional Theft Counts, we need to calculate the total theft counts by region for comparison:
+![Q38](https://github.com/user-attachments/assets/2e3cf4aa-d7e8-47ce-bc28-73a574570eae)
+
 
 ## Conclusion
 This project provides a comprehensive analysis of motor vehicle theft patterns in New Zealand, facilitating informed decision-making for law enforcement and policy development. By leveraging SQL queries and data analysis techniques, users can uncover valuable insights into vehicle theft trends and characteristics.  
