@@ -192,6 +192,7 @@ make_type (VARCHAR)
 
 
 #28.What proportion of thefts involve vehicles that are over 10 years old?
+
 ![Q28](https://github.com/user-attachments/assets/9e778f66-3862-4256-b144-fc4f44089b34)
 
 
