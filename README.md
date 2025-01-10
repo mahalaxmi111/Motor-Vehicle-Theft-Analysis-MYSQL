@@ -10,8 +10,8 @@ This project analyzes motor vehicle theft data from the New Zealand police depar
 https://www.mysql.com/
 ## SQL Scripts
 The project includes SQL scripts for creating the database and inserting sample data:
-- ** Database Creation: The script initializes the database and creates necessary tables. See -<a href="https://github.com/mahalaxmi111/Motor-Vehicle-Theft-Analysis-MYSQL/blob/main/create_stolen_vehicles_db.sql">create_stolen_vehicles_db.sql</a> for details.
-- **  Data Insertion and Analysis: The analysis queries are included in -<a href="https://github.com/mahalaxmi111/Motor-Vehicle-Theft-Analysis-MYSQL/blob/main/create_stolen_vehicles_db.sql">analysisstolenVehicle.sql</a>.
+- Database Creation: The script initializes the database and creates necessary tables. See -<a href="https://github.com/mahalaxmi111/Motor-Vehicle-Theft-Analysis-MYSQL/blob/main/create_stolen_vehicles_db.sql">create_stolen_vehicles_db.sql</a> for details.
+- Data Insertion and Analysis: The analysis queries are included in -<a href="https://github.com/mahalaxmi111/Motor-Vehicle-Theft-Analysis-MYSQL/blob/main/create_stolen_vehicles_db.sql">analysisstolenVehicle.sql</a>.
 
 ## Database Structure
 The project utilizes a MySQL database with the following schema:
