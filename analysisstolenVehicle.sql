@@ -560,16 +560,4 @@ FROM
     stolen_vehicles
 GROUP BY 
     vehicle_type;
-#38. SQL Query to Calculate Regional Theft Counts
-#Next, we need to calculate the total theft counts by region for comparison:
-SELECT 
-    l.region,
-    s.vehicle_type,
-    COUNT(*) AS total_thefts,
-    AVG(s.model_year) AS average_age
-FROM 
-    stolen_vehicles s
-JOIN 
-    locations l ON s.location_id = l.location_id
-GROUP BY 
-    l.region, s.vehicle_type;
+
